@@ -50,6 +50,7 @@ public class AdminController {
 	@Autowired CategoryDAO cateDAO;
 	@Autowired AccountDAO accDAO;
 	@Autowired OrderDAO orderDAO;
+	String kk;
 
 
 	@Autowired 	ShoppingCartService cart;
