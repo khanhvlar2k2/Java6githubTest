@@ -1,0 +1,37 @@
+Create database J6Security
+use J6Security
+use master
+drop database J6Security
+
+create table roles(
+Id varchar(10) primary key,
+Name varchar(50)
+);
+create table EmployeeRoles(
+Id int primary key AUTO_INCREMENT,
+UserName varchar(20),
+RoleId varchar(10),
+FOREIGN KEY (RoleId) REFERENCES roles (Id)
+);
+Create Table Employees(
+Username varchar(20) primary key,
+password varchar(100),
+Fullname varchar(50),
+Email varchar(50)
+);
+insert into roles  values 
+(N'Admin',N'Administrators'),
+(N'GUEST',N'Guests'),
+(N'USER',N'users');
+insert into Employees values
+(N'user1',123,N'Nguyễn Văn USER1','user1@fpt.edu.vn'),
+(N'user2',123,N'Đoàn Thị USER2','user2@fpt.edu.vn'),
+(N'user3',123,N'Trần Thị Mỹ USER3','user3@fpt.edu.vn'),
+(N'user4',123,N'Phạm Tuấn USER4','user4@fpt.edu.vn');
+insert into EmployeeRoles(UserName,RoleId) values
+(N'user2',N'USER'),
+(N'user2',N'GUEST'),
+(N'user2',N'ADMIN'),
+(N'user2',N'USER'),
+(N'user2',N'GUEST'),
+(N'user2',N'GUEST');
