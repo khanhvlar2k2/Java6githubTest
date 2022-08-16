@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body ng-app="app" ng-controller="ctrl">
+    <h2>Role Authorize</h2>
+    <table ng-if="db" style="width: 100%;" border="1">
+        <thead>
+            <tr>
+                <th></th>
+                <th ng-repeat="role in db.roles">{{role.name}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="acc in db.accounts">
+                <th>{{acc.username}}</th>
+                <th ng-repeat="role in db.roles">
+                    <input type="checkbox" ng-checked="index_of(acc.username,role.id) >= 0"
+                        ng-click="update(acc.username,role.id)">
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</body>
+<script>
+    var app = angular.module("app", []);
+    app.controller("ctrl", function ($scope, $http) {   
+        $http.get("/rest/authorities").then(resp => {
+            $scope.db = resp.data;
+        });
+        $scope.index_of = function (username, role) {
+            return $scope.db.authorities.
+            findIndex(a => a.employee.username == username && a.role.id == role);
+        };
+        $scope.update = function (username, role) {
+            var index = $scope.index_of(username, role);
+            if (index >= 0) {   
+                var id = $scope.db.authorities[index].id;
+                $http.delete(`/rest/authorities/${id}`).then(resp => {
+                    $scope.db.authorities.splice(index, 1);
+                })
+            }
+            else {
+                var authority = {
+                    employee: { username: username },
+                    role: { id: role }
+                };
+                $http.post('/rest/authorities/', authority).then(resp => {
+                    $scope.db.authorities.push(resp.data);
+                });
+            }
+        }
+    });
+</script>
+
+</html>
